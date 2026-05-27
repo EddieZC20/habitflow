@@ -1,22 +1,21 @@
 /* ================================================================
    CONSTANTS
 ================================================================ */
-const DAYS = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
-const DAY_FULL = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
-const STORAGE_KEY_HABITS  = 'hf_habits';
-const STORAGE_KEY_CHECKS  = 'hf_checks';
-const STORAGE_KEY_WEEK    = 'hf_week';
+const DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+const DAY_FULL = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+const STORAGE_KEY_HABITS = 'hf_habits';
+const STORAGE_KEY_CHECKS = 'hf_checks';
+const STORAGE_KEY_WEEK = 'hf_week';
 const STORAGE_KEY_HISTORY = 'hf_history';
 
 const EMOJIS = [
-  '💪','📚','🏋️','🧹','🪮','🚿','💻','🧘','🏃','🎯','✍️','🥗','💤','🎸','🧠',
-  '🚫','❤️','🌿','☀️','🌙','⚡','🎨','🏊','🚴','🤸','🍎','💊','📝','🔥','⭐',
-  '🌟','🧩','🎵','🕐','📖','🛏','🪥','💧','🧴','🏡','👟','🎓','🌈','🤝','🫀',
-  '🧘‍♂️','🎯','📊','💡','🎭','🛡️','🌸','🍀'
+  '💪', '📚', '🏋️', '🧹', '🪮', '🚿', '💻', '🧘', '🏃', '🎯', '✍️', '🥗', '💤', '🎸', '🧠',
+  '🚫', '❤️', '🌿', '☀️', '🌙', '⚡', '🎨', '🏊', '🚴', '🤸', '🍎', '💊', '📝', '🔥', '⭐',
+  '🌟', '🧩', '🎵', '🕐', '📖', '🛏', '🪥', '💧', '🧴', '🏡', '👟', '🎓', '🌈', '🤝', '🫀',
+  '🧘‍♂️', '🎯', '📊', '💡', '🎭', '🛡️', '🌸', '🍀'
 ];
 
 const DEFAULT_HABITS = [
-  { id: uid(), emoji: '🚫', name: 'No masturbarme' },
   { id: uid(), emoji: '📚', name: 'Leer un libro' },
   { id: uid(), emoji: '🏋️', name: 'Ir al gimnasio' },
   { id: uid(), emoji: '🧹', name: 'Arreglar mi cuarto' },
@@ -28,8 +27,8 @@ const DEFAULT_HABITS = [
 /* ================================================================
    STATE
 ================================================================ */
-let habits  = [];
-let checks  = {}; // { habitId: { 0:bool, 1:bool, ... 6:bool } }
+let habits = [];
+let checks = {}; // { habitId: { 0:bool, 1:bool, ... 6:bool } }
 let weekKey = '';
 let history = [];
 let selectedEmoji = '⭐';
@@ -44,15 +43,15 @@ function uid() {
 
 function getMonday(d) {
   const date = new Date(d);
-  const day  = date.getDay();
+  const day = date.getDay();
   const diff = (day === 0 ? -6 : 1 - day);
   date.setDate(date.getDate() + diff);
-  date.setHours(0,0,0,0);
+  date.setHours(0, 0, 0, 0);
   return date;
 }
 
 function formatDate(d) {
-  return d.toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'2-digit' });
+  return d.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: '2-digit' });
 }
 
 function getWeekKey(monday) {
@@ -77,12 +76,12 @@ function getWeekDates(monday) {
    STORAGE
 ================================================================ */
 function load() {
-  const storedHabits  = localStorage.getItem(STORAGE_KEY_HABITS);
-  const storedChecks  = localStorage.getItem(STORAGE_KEY_CHECKS);
-  const storedWeek    = localStorage.getItem(STORAGE_KEY_WEEK);
+  const storedHabits = localStorage.getItem(STORAGE_KEY_HABITS);
+  const storedChecks = localStorage.getItem(STORAGE_KEY_CHECKS);
+  const storedWeek = localStorage.getItem(STORAGE_KEY_WEEK);
   const storedHistory = localStorage.getItem(STORAGE_KEY_HISTORY);
 
-  habits  = storedHabits  ? JSON.parse(storedHabits)  : DEFAULT_HABITS;
+  habits = storedHabits ? JSON.parse(storedHabits) : DEFAULT_HABITS;
   history = storedHistory ? JSON.parse(storedHistory) : [];
 
   const monday = getMonday(new Date());
@@ -102,16 +101,16 @@ function load() {
 }
 
 function save() {
-  localStorage.setItem(STORAGE_KEY_HABITS,  JSON.stringify(habits));
-  localStorage.setItem(STORAGE_KEY_CHECKS,  JSON.stringify(checks));
-  localStorage.setItem(STORAGE_KEY_WEEK,    weekKey);
+  localStorage.setItem(STORAGE_KEY_HABITS, JSON.stringify(habits));
+  localStorage.setItem(STORAGE_KEY_CHECKS, JSON.stringify(checks));
+  localStorage.setItem(STORAGE_KEY_WEEK, weekKey);
   localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(history));
 }
 
 function archiveWeek(wKey, wChecks) {
-  const total     = habits.length * 7;
+  const total = habits.length * 7;
   const completed = countChecked(wChecks);
-  const pct       = total > 0 ? Math.round((completed / total) * 100) : 0;
+  const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
   history.unshift({ week: wKey, pct, completed, total });
   if (history.length > 12) history.pop();
   save();
@@ -147,15 +146,15 @@ function renderHeader() {
    RENDER TABLE HEAD
 ================================================================ */
 function renderTableHead() {
-  const monday  = getMonday(new Date());
-  const dates   = getWeekDates(monday);
-  const todayI  = getTodayDayIndex();
+  const monday = getMonday(new Date());
+  const dates = getWeekDates(monday);
+  const todayI = getTodayDayIndex();
 
   let html = '<tr>';
   html += '<th class="col-habit">Hábito</th>';
   dates.forEach((d, i) => {
     const isToday = (i === todayI);
-    const dayNum  = d.getDate();
+    const dayNum = d.getDate();
     html += `<th class="col-day${isToday ? ' is-today' : ''}">
       <span class="day-name">${DAYS[i]}</span>
       ${isToday
@@ -173,7 +172,7 @@ function renderTableHead() {
 ================================================================ */
 function renderTableBody() {
   const todayI = getTodayDayIndex();
-  const tbody  = document.getElementById('tableBody');
+  const tbody = document.getElementById('tableBody');
 
   if (habits.length === 0) {
     tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state">
@@ -249,7 +248,7 @@ function onCheckChange(e) {
 
   if (e.target.checked) {
     const total = totalPossible();
-    const done  = countChecked();
+    const done = countChecked();
     if (done === total && total > 0) {
       showConfetti();
       showToast('🎉 ¡Semana perfecta! ¡Eres increíble!', 'success');
@@ -263,15 +262,15 @@ function onCheckChange(e) {
    PROGRESS
 ================================================================ */
 function updateProgress() {
-  const total  = totalPossible();
-  const done   = countChecked();
-  const pct    = total > 0 ? Math.round((done / total) * 100) : 0;
-  const CIRC   = 289.02;
+  const total = totalPossible();
+  const done = countChecked();
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  const CIRC = 289.02;
 
-  document.getElementById('heroPercent').textContent  = `${pct}%`;
+  document.getElementById('heroPercent').textContent = `${pct}%`;
   document.getElementById('heroFraction').textContent = `${done} / ${total} hábitos completados`;
-  document.getElementById('heroBar').style.width      = `${pct}%`;
-  document.getElementById('ringText').textContent     = `${pct}%`;
+  document.getElementById('heroBar').style.width = `${pct}%`;
+  document.getElementById('ringText').textContent = `${pct}%`;
   document.getElementById('ringArc').style.strokeDashoffset = CIRC - (CIRC * pct / 100);
 }
 
@@ -280,18 +279,18 @@ function updateProgress() {
 ================================================================ */
 function updateStreaks() {
   const todayI = getTodayDayIndex();
-  const row    = document.getElementById('streakRow');
+  const row = document.getElementById('streakRow');
 
   let best = null, worst = null, bestCount = -1, worstCount = 8;
 
   habits.forEach(h => {
     const cnt = countHabitChecked(h.id);
-    if (cnt > bestCount)  { bestCount = cnt; best = h; }
+    if (cnt > bestCount) { bestCount = cnt; best = h; }
     if (cnt < worstCount) { worstCount = cnt; worst = h; }
   });
 
-  const totalDone  = countChecked();
-  const todayDone  = habits.filter(h => checks[h.id]?.[todayI]).length;
+  const totalDone = countChecked();
+  const todayDone = habits.filter(h => checks[h.id]?.[todayI]).length;
   const todayTotal = habits.length;
 
   let html = '';
@@ -321,12 +320,12 @@ function updateAnalysis() {
   let gridHTML = '';
   const habitStats = habits.map(h => {
     const done = countHabitChecked(h.id);
-    const pct  = daysElapsed > 0 ? Math.round((done / daysElapsed) * 100) : 0;
+    const pct = daysElapsed > 0 ? Math.round((done / daysElapsed) * 100) : 0;
     return { h, done, pct };
   }).sort((a, b) => b.pct - a.pct);
 
   habitStats.forEach(({ h, done, pct }) => {
-    const cls  = pct >= 80 ? 'great' : pct >= 50 ? 'ok' : 'bad';
+    const cls = pct >= 80 ? 'great' : pct >= 50 ? 'ok' : 'bad';
     const fill = `fill-${cls}`, pctCls = `pct-${cls}`;
     gridHTML += `
       <div class="analysis-habit-item">
@@ -344,9 +343,9 @@ function updateAnalysis() {
   grid.innerHTML = gridHTML || '<p style="color:var(--text-muted);font-size:14px">Empieza a marcar hábitos para ver tu análisis.</p>';
 
   // Generate insights
-  const great  = habitStats.filter(s => s.pct >= 80);
-  const ok     = habitStats.filter(s => s.pct >= 50 && s.pct < 80);
-  const bad    = habitStats.filter(s => s.pct < 50);
+  const great = habitStats.filter(s => s.pct >= 80);
+  const ok = habitStats.filter(s => s.pct >= 50 && s.pct < 80);
+  const bad = habitStats.filter(s => s.pct < 50);
   const totalP = totalPossible();
   const totalD = countChecked();
   const overallPct = totalP > 0 ? Math.round((totalD / totalP) * 100) : 0;
@@ -368,7 +367,7 @@ function updateAnalysis() {
 
   // Best habits
   if (great.length > 0) {
-    const names = great.slice(0,2).map(s => `${s.h.emoji} ${s.h.name}`).join(', ');
+    const names = great.slice(0, 2).map(s => `${s.h.emoji} ${s.h.name}`).join(', ');
     lines.push(`✅ ¡Vas muy bien con: ${names}! Mantén esa constancia.`);
   }
 
@@ -380,7 +379,7 @@ function updateAnalysis() {
 
   // Mid habits
   if (ok.length > 0) {
-    const okNames = ok.slice(0,1).map(s => `${s.h.emoji} ${s.h.name}`).join(', ');
+    const okNames = ok.slice(0, 1).map(s => `${s.h.emoji} ${s.h.name}`).join(', ');
     lines.push(`🟡 Puedes mejorar en: ${okNames}. ¡Estás cerca de la consistencia!`);
   }
 
@@ -400,7 +399,7 @@ function updateAnalysis() {
 ================================================================ */
 function renderHistory() {
   const container = document.getElementById('historyList');
-  const clearBtn  = document.getElementById('clearHistoryBtn');
+  const clearBtn = document.getElementById('clearHistoryBtn');
 
   if (history.length === 0) {
     container.innerHTML = '<p style="color:var(--text-muted);font-size:14px;padding:8px 0">No hay semanas anteriores aún.</p>';
@@ -418,7 +417,7 @@ function renderHistory() {
       <div class="history-score-bar">
         <div class="history-score-fill" style="width:${item.pct}%"></div>
       </div>
-      <div class="history-score-text" style="color:${item.pct>=80?'var(--emerald)':item.pct>=50?'var(--amber)':'var(--rose)'}">${item.pct}%</div>
+      <div class="history-score-text" style="color:${item.pct >= 80 ? 'var(--emerald)' : item.pct >= 50 ? 'var(--amber)' : 'var(--rose)'}">${item.pct}%</div>
     </div>`;
   }).join('');
 }
@@ -428,7 +427,7 @@ function renderHistory() {
 ================================================================ */
 function addHabit() {
   const input = document.getElementById('newHabitInput');
-  const name  = input.value.trim();
+  const name = input.value.trim();
   if (!name) { showToast('⚠️ Escribe el nombre del hábito', 'warning'); return; }
 
   const habit = { id: uid(), emoji: selectedEmoji, name };
@@ -540,7 +539,7 @@ function showCheckPop(checkbox) {
 ================================================================ */
 function showConfetti() {
   const wrap = document.getElementById('confettiWrap');
-  const colors = ['#6366f1','#8b5cf6','#10b981','#f59e0b','#f43f5e','#0ea5e9','#a78bfa'];
+  const colors = ['#6366f1', '#8b5cf6', '#10b981', '#f59e0b', '#f43f5e', '#0ea5e9', '#a78bfa'];
   for (let i = 0; i < 70; i++) {
     const p = document.createElement('div');
     p.className = 'confetti-piece';
@@ -548,7 +547,7 @@ function showConfetti() {
     p.style.animationDelay = Math.random() * 0.8 + 's';
     p.style.animationDuration = (1 + Math.random() * 0.8) + 's';
     p.style.background = colors[Math.floor(Math.random() * colors.length)];
-    p.style.width  = (6 + Math.random() * 8) + 'px';
+    p.style.width = (6 + Math.random() * 8) + 'px';
     p.style.height = (6 + Math.random() * 8) + 'px';
     p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
     wrap.appendChild(p);
@@ -560,7 +559,7 @@ function showConfetti() {
    ESCAPE HTML
 ================================================================ */
 function escHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 /* ================================================================
@@ -592,11 +591,11 @@ function init() {
 
   // Emoji toggle
   const emojiBtn = document.getElementById('emojiToggleBtn');
-  const picker   = document.getElementById('emojiPicker');
+  const picker = document.getElementById('emojiPicker');
   emojiBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     const rect = emojiBtn.getBoundingClientRect();
-    picker.style.top  = (emojiBtn.offsetTop - picker.offsetHeight - 8) + 'px';
+    picker.style.top = (emojiBtn.offsetTop - picker.offsetHeight - 8) + 'px';
     picker.style.left = emojiBtn.offsetLeft + 'px';
     picker.style.position = 'absolute';
     picker.classList.toggle('hidden');
