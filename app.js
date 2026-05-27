@@ -7,6 +7,10 @@ const STORAGE_KEY_HABITS = 'hf_habits';
 const STORAGE_KEY_CHECKS = 'hf_checks';
 const STORAGE_KEY_WEEK = 'hf_week';
 const STORAGE_KEY_HISTORY = 'hf_history';
+const STORAGE_KEY_VERSION = 'hf_version';
+
+// Cambia este número de versión cada vez que quieras forzar a los usuarios a ver tus nuevos DEFAULT_HABITS
+const APP_VERSION = '1.0.0';
 
 const EMOJIS = [
   '💪', '📚', '🏋️', '🧹', '🪮', '🚿', '💻', '🧘', '🏃', '🎯', '✍️', '🥗', '💤', '🎸', '🧠',
@@ -77,6 +81,12 @@ function getWeekDates(monday) {
    STORAGE
 ================================================================ */
 function load() {
+  const storedVersion = localStorage.getItem(STORAGE_KEY_VERSION);
+  if (storedVersion !== APP_VERSION) {
+    localStorage.removeItem(STORAGE_KEY_HABITS);
+    localStorage.setItem(STORAGE_KEY_VERSION, APP_VERSION);
+  }
+
   const storedHabits = localStorage.getItem(STORAGE_KEY_HABITS);
   const storedChecks = localStorage.getItem(STORAGE_KEY_CHECKS);
   const storedWeek = localStorage.getItem(STORAGE_KEY_WEEK);
